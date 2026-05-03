@@ -40,7 +40,9 @@ body {
   position: relative;
   background-image: 
       linear-gradient(rgba(13, 2, 33, 0.8), rgba(5, 1, 16, 0.9)),
-      url('assets/images/grid-pattern.png');
+      linear-gradient(rgba(5, 217, 232, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 42, 109, 0.08) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
 }
 
 /* Efeitos de Jogo */
@@ -74,7 +76,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('assets/images/noise.png');
+  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 4px 4px;
   opacity: 0.03;
   mix-blend-mode: overlay;
 }
@@ -1343,46 +1346,633 @@ body {
   }
 }
 
-/* Tema Claro */
+/* =========================
+   🌞 LIGHT MODE COMPLETO
+========================= */
 [data-theme="light"] {
-  --bg-dark: #f0f0f0;
-  --bg-darker: #e0e0e0;
+
+  /* FUNDOS */
+  --bg-dark: #f5f7fa;
+  --bg-darker: #e9ecf1;
   --bg-light: #ffffff;
-  
-  --text-primary: #222222;
-  --text-secondary: #444444;
-  --text-dim: #666666;
-  
-  --neon-pink: #ff0055;
-  --neon-blue: #0066ff;
-  --neon-purple: #9900ff;
-  --neon-green: #00aa55;
+
+  /* TEXTOS */
+  --text-primary: #1a1a1a;
+  --text-secondary: #444;
+  --text-dim: #777;
+
+  /* CORES (menos agressivas no claro) */
+  --neon-pink: #ff2a6d;
+  --neon-blue: #0077ff;
+  --neon-purple: #9d00ff;
+  --neon-green: #00aa66;
   --neon-yellow: #ffaa00;
-  
-  --scanline-opacity: 0.03;
+
+  --scanline-opacity: 0.02;
 }
 
-[data-theme="light"] .game-overlay {
-  background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9)),
-      url('assets/images/grid-pattern-light.png');
+/* =========================
+   BACKGROUND
+========================= */
+[data-theme="light"] body {
+  background-color: var(--bg-dark);
+  background-image:
+      linear-gradient(rgba(255,255,255,0.9), rgba(245,247,250,0.95)),
+      linear-gradient(rgba(5, 217, 232, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 42, 109, 0.08) 1px, transparent 1px);
 }
 
+/* =========================
+   OVERLAY (reduz efeitos pesados)
+========================= */
+[data-theme="light"] .noise {
+  opacity: 0.01;
+}
+
+[data-theme="light"] .vignette {
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================
+   HEADER
+========================= */
+[data-theme="light"] .game-header {
+  background: linear-gradient(135deg, #ffffff, #f0f2f7);
+  border-bottom: 3px solid var(--neon-pink);
+}
+
+/* =========================
+   NAVBAR
+========================= */
+[data-theme="light"] .game-nav {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .nav-link {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .nav-link:hover {
+  color: var(--neon-blue);
+}
+
+/* =========================
+   CARDS
+========================= */
 [data-theme="light"] .terminal-card {
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 
-      0 0 20px rgba(0, 102, 255, 0.2),
-      inset 0 0 15px rgba(0, 102, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0,0,0,0.08);
+
+  box-shadow:
+      0 5px 20px rgba(0,0,0,0.08),
+      inset 0 0 10px rgba(0,0,0,0.03);
 }
 
+[data-theme="light"] .terminal-card:hover {
+  box-shadow:
+      0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   TEXTO
+========================= */
 [data-theme="light"] .terminal-text {
   color: var(--text-secondary);
 }
 
-[data-theme="light"] .game-nav {
-  background-color: rgba(240, 240, 240, 0.9);
+/* remove glow pesado */
+[data-theme="light"] .neon-text {
+  text-shadow: none;
 }
 
-[data-theme="light"] .game-header {
-  background: linear-gradient(135deg, rgba(240, 240, 240, 0.9), rgba(255, 255, 255, 0.9));
+/* =========================
+   RADIO
+========================= */
+[data-theme="light"] .radio-station {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .radio-display {
+  background: #f0f2f7;
+  border: 1px solid var(--neon-green);
+}
+
+/* =========================
+   BOTÕES
+========================= */
+[data-theme="light"] .radio-btn {
+  background: white;
+  border: 1px solid var(--neon-blue);
+  color: var(--neon-blue);
+}
+
+[data-theme="light"] .radio-btn:hover {
+  background: var(--neon-blue);
+  color: white;
+}
+
+[data-theme="light"] .project-btn.code {
+  border: 1px solid var(--neon-purple);
+  color: var(--neon-purple);
+}
+
+[data-theme="light"] .project-btn.code:hover {
+  background: var(--neon-purple);
+  color: white;
+}
+
+/* =========================
+   INPUTS / FORM
+========================= */
+[data-theme="light"] .terminal-input {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.2);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .terminal-input:focus {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 5px rgba(0,119,255,0.3);
+}
+
+/* =========================
+   FOOTER
+========================= */
+[data-theme="light"] .game-footer {
+  background: linear-gradient(to top, #f0f2f7, #ffffff);
+}
+
+[data-theme="light"] .footer-link {
+  color: var(--text-secondary);
+}
+
+/* =========================
+   GLITCH (DESATIVAR NO LIGHT)
+========================= */
+[data-theme="light"] .glitch-active {
+  animation: none;
+}
+
+/* =========================
+   SCROLLBAR (opcional bonito)
+========================= */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+}
+
+/* =========================
+   MOBILE MELHORADO
+========================= */
+@media (max-width: 768px) {
+
+  [data-theme="light"] body {
+      background-image: none; /* melhora performance */
+  }
+
+  [data-theme="light"] .terminal-card {
+      backdrop-filter: none;
+  }
+
+}
+
+/* =========================
+   RESPONSIVIDADE GERAL
+========================= */
+img,
+video {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.terminal-card,
+.project-card,
+.skill-category,
+.contact-info,
+.contact-form {
+  min-width: 0;
+}
+
+.nav-link,
+.project-btn,
+.social-btn,
+.submit-btn,
+.terminal-input,
+.track-name,
+.company,
+.section-title {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1024px) {
+  .container {
+      max-width: 920px;
+      padding-inline: 18px;
+  }
+
+  .game-header {
+      padding: 3rem 0;
+  }
+
+  .jta-logo {
+      gap: 1rem;
+  }
+
+  .jta-badge {
+      font-size: 1.6rem;
+  }
+
+  .neon-text {
+      text-shadow:
+          0 0 4px currentColor,
+          0 0 8px currentColor;
+  }
+
+  .professional-subtitle {
+      font-size: 1.4rem;
+      white-space: normal;
+  }
+
+  .personal-tagline {
+      font-size: 1rem;
+  }
+
+  .section {
+      padding: 4rem 0;
+  }
+
+  .section-title {
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+  }
+
+  .about-container,
+  .contact-container {
+      gap: 1.5rem;
+  }
+
+  .bio-container,
+  .about-details {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+  }
+
+  .skills-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+  }
+
+  .project-card {
+      flex: 0 0 min(420px, 85vw);
+  }
+
+  .project-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+      background-size: auto, 36px 36px, 36px 36px;
+  }
+
+  .game-overlay {
+      opacity: 0.65;
+  }
+
+  .vignette {
+      box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.75);
+  }
+
+  .game-header {
+      padding: 2rem 0;
+  }
+
+  .jta-logo {
+      flex-direction: column;
+      gap: 0.8rem;
+  }
+
+  .jta-logo h1 {
+      font-size: 1.8rem;
+      line-height: 1.2;
+  }
+
+  .jta-badge {
+      padding: 0.7rem 1rem;
+      font-size: 1.2rem;
+  }
+
+  .professional-subtitle {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      white-space: normal;
+      border-right: 0;
+      animation: none;
+  }
+
+  .personal-tagline {
+      font-size: 0.95rem;
+      line-height: 1.5;
+  }
+
+  .radio-station {
+      max-width: 100%;
+  }
+
+  .game-nav {
+      position: static;
+  }
+
+  .nav-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+      padding: 0.9rem 0;
+  }
+
+  .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.7rem 0.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      letter-spacing: 0;
+  }
+
+  .nav-link::before {
+      display: none;
+  }
+
+  .nav-extra {
+      gap: 12px;
+      padding: 0 0 0.9rem;
+  }
+
+  .jta-version {
+      font-size: 0.55rem;
+  }
+
+  .theme-switcher {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+  }
+
+  .game-hud {
+      display: none;
+  }
+
+  .section {
+      padding: 3rem 0;
+  }
+
+  .section-title {
+      font-size: 1.55rem;
+      line-height: 1.25;
+      margin-bottom: 2rem;
+      letter-spacing: 0;
+  }
+
+  .terminal-card {
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      border-radius: 6px;
+  }
+
+  .about-container,
+  .bio-container,
+  .about-details,
+  .contact-container {
+      flex-direction: column;
+      gap: 1rem;
+  }
+
+  .about-image,
+  .about-content,
+  .professional-bio,
+  .personal-bio,
+  .gta-card,
+  .music-card,
+  .contact-info,
+  .contact-form {
+      min-width: 0;
+      width: 100%;
+  }
+
+  .pixel-border::before {
+      inset: -5px;
+  }
+
+  .music-player {
+      align-items: flex-start;
+  }
+
+  .timeline {
+      padding-left: 0;
+  }
+
+  .timeline::before,
+  .timeline-node,
+  .timeline-badge {
+      display: none;
+  }
+
+  .timeline-date {
+      position: static;
+      display: inline-block;
+      writing-mode: horizontal-tb;
+      transform: none;
+      margin-bottom: 0.8rem;
+      font-size: 0.62rem;
+  }
+
+  .timeline-content h3 {
+      font-size: 1.05rem;
+      line-height: 1.35;
+  }
+
+  .timeline-content ul {
+      padding-left: 0;
+      list-style-position: inside;
+  }
+
+  .skills-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+  }
+
+  .skill-name,
+  .stat-name {
+      font-size: 0.6rem;
+      line-height: 1.5;
+  }
+
+  .projects-carousel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      overflow: visible;
+      padding-bottom: 0;
+      scroll-snap-type: none;
+  }
+
+  .project-card {
+      min-width: 0;
+      width: 100%;
+      scroll-snap-align: none;
+  }
+
+  .project-tags span {
+      font-size: 0.48rem;
+      line-height: 1.5;
+  }
+
+  .project-image img {
+      height: 180px;
+  }
+
+  .project-actions,
+  .social-links {
+      flex-direction: column;
+  }
+
+  .project-btn,
+  .social-btn,
+  .submit-btn {
+      min-height: 44px;
+  }
+
+  .contact-details p {
+      align-items: flex-start;
+      overflow-wrap: anywhere;
+  }
+
+  .terminal-input {
+      min-height: 44px;
+      font-size: 1rem;
+  }
+
+  textarea.terminal-input {
+      min-height: 140px;
+  }
+
+  .footer-content {
+      gap: 1.4rem;
+      text-align: center;
+  }
+
+  .jta-signature {
+      flex-direction: column;
+  }
+
+  .footer-nav {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .project-image {
+      display: flex;
+      flex-direction: column;
+  }
+
+  .project-overlay {
+      position: static;
+      height: auto;
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+  }
+
+  .project-overlay p {
+      transform: none;
+      margin-bottom: 0.6rem;
+  }
+
+  .project-image:hover img {
+      transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+      padding-inline: 14px;
+  }
+
+  .jta-logo h1 {
+      font-size: 1.35rem;
+  }
+
+  .jta-badge {
+      font-size: 0.95rem;
+  }
+
+  .personal-tagline,
+  .terminal-text,
+  .contact-details p {
+      font-size: 0.95rem;
+  }
+
+  .nav-list {
+      grid-template-columns: 1fr;
+  }
+
+  .section-title {
+      font-size: 1.25rem;
+  }
+
+  .terminal-card {
+      padding: 1rem;
+  }
+
+  .music-player {
+      flex-direction: column;
+  }
+
+  .album-cover {
+      width: 96px;
+      height: 96px;
+  }
+
+  .project-image img {
+      height: 160px;
+  }
+
+  .project-tags {
+      gap: 4px;
+  }
+
+  .radio-controls {
+      gap: 10px;
+  }
+
+  .radio-btn {
+      width: 38px;
+      height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+  }
 }

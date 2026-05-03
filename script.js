@@ -1,10 +1,6 @@
-/**
- * JTA Portfolio - Cyberpunk/Gamer Edition
- * Script completo com efeitos avançados de jogo
- */
-
 class JTAPortfolio {
   constructor() {
+    this.isMobile = window.innerWidth <= 768;
       this.config = {
           easterEggTrigger: ['j', 't', 'a'],
           radioStations: [
@@ -33,7 +29,7 @@ class JTAPortfolio {
           glitchElements: ['.glitch', '.neon-text', '.section-title', '.jta-badge'],
           musicBars: '.music-bars span',
           soundEffects: {
-              hover: "sounds/hover.wav",
+              hover: "sounds/Hover.wav",
               select: "sounds/select.wav",
               switch: "sounds/switch.wav",
               confirm: "sounds/confirm.flac",
@@ -49,6 +45,29 @@ class JTAPortfolio {
       this.init();
   }
 
+
+  initResponsive() {
+    const updateLayout = () => {
+        this.isMobile = window.innerWidth <= 768;
+
+        // 🎧 Ajuste do rádio
+        this.config.radioInterval = this.isMobile ? 25000 : 15000;
+
+        // 🔇 Reduz ainda mais o volume no mobile
+        if (this.isMobile) {
+            this.globalVolume = 0.7;
+        } else {
+            this.globalVolume = 1;
+        }
+
+        // 🎨 Classe global
+        document.body.classList.toggle('mobile', this.isMobile);
+    };
+
+    window.addEventListener('resize', updateLayout);
+    updateLayout();
+}
+
   init() {
       this.initCurrentYear();
       this.initThemeSwitcher();
@@ -62,6 +81,8 @@ class JTAPortfolio {
       this.initSoundEffects();
       this.initGameButtons();
       this.initConsoleLogStyle();
+      this.initResponsive();
+      this.initSwipe();
       
       if (this.config.particles) {
           this.initParticles();
@@ -69,12 +90,16 @@ class JTAPortfolio {
   }
 
   initCurrentYear() {
-      document.getElementById('current-year').textContent = new Date().getFullYear();
+      const currentYear = document.getElementById('current-year');
+      if (currentYear) {
+          currentYear.textContent = new Date().getFullYear();
+      }
   }
 
   initThemeSwitcher() {
       const themeSwitcher = document.querySelector('.theme-switcher');
       const htmlElement = document.documentElement;
+      if (!themeSwitcher) return;
       
       // Verifica tema salvo ou preferência do sistema
       const savedTheme = localStorage.getItem('theme') || 
@@ -130,6 +155,8 @@ class JTAPortfolio {
   }
 
   showEasterEgg(element) {
+      if (!element) return;
+
       element.classList.add('show');
       
       setTimeout(() => {
@@ -144,7 +171,14 @@ class JTAPortfolio {
       const prevBtn = document.querySelector('.prev');
       const nextBtn = document.querySelector('.next');
       
-      if (!radioDisplay || !this.config.radioStations.length) return;
+      if (
+          !radioDisplay ||
+          !radioVisualizer ||
+          !playPauseBtn ||
+          !prevBtn ||
+          !nextBtn ||
+          !this.config.radioStations.length
+      ) return;
       
       // Inicia com a primeira estação
       this.changeRadioStation();
@@ -193,6 +227,8 @@ class JTAPortfolio {
   }
 
   animateRadioVisualizer(visualizer) {
+      if (!visualizer) return;
+
       const bars = visualizer.querySelectorAll('span');
       
       bars.forEach((bar, index) => {
@@ -263,19 +299,21 @@ class JTAPortfolio {
       }
   }
 
-  initGlitchEffects() {
-      this.config.glitchElements.forEach(selector => {
-          document.querySelectorAll(selector).forEach(element => {
-              element.addEventListener('mouseenter', () => {
-                  element.classList.add('glitch-active');
-              });
-              
-              element.addEventListener('mouseleave', () => {
-                  element.classList.remove('glitch-active');
-              });
-          });
-      });
-  }
+initGlitchEffects() {
+    if (this.isMobile) return;
+
+    this.config.glitchElements.forEach(selector => {
+        document.querySelectorAll(selector).forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                element.classList.add('glitch-active');
+            });
+
+            element.addEventListener('mouseleave', () => {
+                element.classList.remove('glitch-active');
+            });
+        });
+    });
+}
 
   initMusicBars() {
       document.querySelectorAll(this.config.musicBars).forEach((bar, index) => {
@@ -294,11 +332,18 @@ class JTAPortfolio {
           // Pré-carrega efeitos sonoros
           Object.entries(this.config.soundEffects).forEach(([key, path]) => {
               fetch(path)
-                  .then(response => response.arrayBuffer())
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error(`Falha ao carregar som: ${path}`);
+                      }
+
+                      return response.arrayBuffer();
+                  })
                   .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer))
                   .then(audioBuffer => {
                       this.sounds[key] = audioBuffer;
-                  });
+                  })
+                  .catch(error => console.warn(error.message));
           });
       } catch (e) {
           console.warn("Web Audio API não suportada ou bloqueada:", e);
@@ -318,46 +363,81 @@ class JTAPortfolio {
       });
   }
 
-  playSound(type) {
-      if (!this.audioContext || !this.sounds[type]) return;
-      
-      const source = this.audioContext.createBufferSource();
-      source.buffer = this.sounds[type];
-      source.connect(this.audioContext.destination);
-      
-      // Ajusta volume baseado no tipo
-      const gainNode = this.audioContext.createGain();
-      const volume = {
-          hover: 0.3,
-          select: 0.5,
-          switch: 0.4,
-          confirm: 0.6,
-          cheat: 0.7
-      }[type] || 0.5;
-      
-      gainNode.gain.value = volume;
-      source.connect(gainNode);
-      gainNode.connect(this.audioContext.destination);
-      
-      source.start(0);
-  }
+ playSound(type) {
+    if (!this.audioContext || !this.sounds[type]) return;
 
-  initGameButtons() {
-      document.querySelectorAll('.game-button, .menu-item').forEach(button => {
-          // Efeito de brilho ao passar o mouse
-          button.addEventListener('mouseenter', () => {
-              const shine = document.createElement('div');
-              shine.className = 'button-shine';
-              button.appendChild(shine);
-              
-              setTimeout(() => {
-                  shine.remove();
-              }, 1000);
-          });
-      });
-  }
+    if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+    }
+
+    const source = this.audioContext.createBufferSource();
+    const gainNode = this.audioContext.createGain();
+
+    source.buffer = this.sounds[type];
+
+    // 🔥 Volume geral MAIS BAIXO
+    const baseVolume = 0.3;
+
+    const volumeMap = {
+        hover: 0.2,
+        select: 0.3,
+        switch: 0.25,
+        confirm: 0.35,
+        cheat: 0.4
+    };
+
+    gainNode.gain.value = volumeMap[type] || baseVolume;
+
+    // ✅ conexão correta (SEM duplicar)
+    source.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+
+    gainNode.gain.value = (volumeMap[type] || baseVolume) * (this.globalVolume || 1);
+
+    source.start(0);
+}
+
+initGameButtons() {
+    if (this.isMobile) return;
+
+    document.querySelectorAll('.game-button, .menu-item').forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            const shine = document.createElement('div');
+            shine.className = 'button-shine';
+            button.appendChild(shine);
+
+            setTimeout(() => shine.remove(), 1000);
+        });
+    });
+}
+
+initSwipe() {
+    let startX = 0;
+
+    document.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', e => {
+        let endX = e.changedTouches[0].clientX;
+
+        if (startX - endX > 50) {
+            this.currentStationIndex =
+                (this.currentStationIndex + 1) % this.config.radioStations.length;
+            this.changeRadioStation();
+        }
+
+        if (endX - startX > 50) {
+            this.currentStationIndex =
+                (this.currentStationIndex - 1 + this.config.radioStations.length) %
+                this.config.radioStations.length;
+            this.changeRadioStation();
+        }
+    });
+}
 
   initParticles() {
+      if (this.isMobile || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       // Configura partículas para fundo (opcional)
       // Implementação depende da biblioteca de partículas escolhida
       console.log("Inicializando partículas...");
@@ -381,9 +461,10 @@ class JTAPortfolio {
 // Inicializa quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
   const portfolio = new JTAPortfolio();
+  const badge = document.querySelector('.jta-badge');
   
   // Easter egg adicional - clique no logo
-  document.querySelector('.jta-badge').addEventListener('click', () => {
+  badge?.addEventListener('click', () => {
       portfolio.playSound('cheat');
   });
 });
